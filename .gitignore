@@ -8,3 +8,4 @@ temp/
 ormconfig.json
 nodemon.json
 tsconfig.json
+.gitignore
