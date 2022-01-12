@@ -1,11 +1,12 @@
-import {ConnectionOptions, createConnection} from "typeorm";
+import { ConnectionOptions, createConnection } from "typeorm";
 import Koa from 'koa';
 import json from 'koa-bodyparser';
-import AuthRoute from './routes/Auth.route';
+import AuthRoute from './api/user/User.route';
 import logger from 'koa-logger'
+import EducatorRoute from './api/educator/Educator.route';
 require('dotenv').config()
 
-const {DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME, NODE_PORT} = process.env
+const { DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME, NODE_PORT } = process.env
 // define config db
 const config: ConnectionOptions = {
     type: "postgres",
@@ -27,8 +28,17 @@ app.use(json());
 app.use(logger());
 
 //routes
-app.use(AuthRoute.routes())
-    .use(AuthRoute.allowedMethods())
+app
+    .use(AuthRoute.routes())
+    .use(AuthRoute.allowedMethods());
+
+app
+    .use(EducatorRoute.routes())
+    .use(EducatorRoute.allowedMethods());
+
+app.on('error', (err, ctx) => {
+    console.log(err);
+})
 
 //create connection db and server
 createConnection(config).then(() => {

@@ -1,15 +1,15 @@
+import { TokenPair } from '../../types/TokenService';
 import { getRepository } from 'typeorm';
-import { User } from './../entity/User';
-import { IUserService } from '../types/IUserService'
-import UserDto from '../dtos/User.dto';
-import TokenService from './Token.services';
+import { User } from '../../entity/User';
+import { EditableFields, Opts, UserData } from '../../types/UserService';
+import TokenService from '../token/Token.services';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import bcryptjs from 'bcryptjs';
 import createError from 'http-errors';
+import UserDto from './User.dto';
 
-
-class UserService implements IUserService {
-    async create(data) {
+class UserService {
+    async create(data: UserData) {
         const isExist = await this.readOne({ username: data.username });
         
         if (isExist) {
@@ -19,23 +19,21 @@ class UserService implements IUserService {
         const { email, phone, username } = data
         const hashPassword = bcryptjs.hashSync(data.password)
         const userRepo = getRepository(User)
-        const { accessToken, refreshToken } = TokenService.generateTokens({ 
-            email, 
-            username
-        })
         const saved = await userRepo.save({
             email, 
             phone, 
             username, 
-            password: hashPassword, 
-            refreshToken
+            password: hashPassword
         })
         const user = new UserDto(saved)
+        
+        const { accessToken, refreshToken } = TokenService.generateTokens({...user.dto})
+        await this.update({username}, {refreshToken})
 
         return { refreshToken, accessToken, ...user.dto }
     }
 
-    async read(identificators) {
+    async read(identificators: Opts) {
         const userRepo = getRepository(User)
 
         if(!identificators) {
@@ -47,13 +45,13 @@ class UserService implements IUserService {
         return users
     }
 
-    async readOne(identificators) {
+    async readOne(identificators: Opts) {
         const [user] = await this.read(identificators)
 
         return user
     }
 
-    async update(identificators, editableFields) {
+    async update(identificators: Opts, editableFields: EditableFields) {
         const userRepo = getRepository(User)
         const updated = await userRepo.update(
             identificators,
@@ -63,14 +61,14 @@ class UserService implements IUserService {
         return updated
     }
 
-    async delete(identificators) {
+    async delete(identificators: Opts) {
         const userRepo = getRepository(User)
         const deleted = await userRepo.delete(identificators)
 
         return deleted
     }
 
-    async login(email, password) {
+    async login(email: string, password: string) {
         const user = await this.readOne({ email })
 
         if (!user) {
@@ -84,7 +82,7 @@ class UserService implements IUserService {
         }
 
         const userDto = new UserDto(user)
-        const { accessToken, refreshToken } = TokenService.generateTokens({ userDto })
+        const { accessToken, refreshToken } = TokenService.generateTokens({ ...userDto.dto })
 
         await this.update({ id: userDto.id }, { refreshToken })
 
@@ -95,27 +93,30 @@ class UserService implements IUserService {
         }
     }
 
-    async logout(refreshToken) {
+    async logout(refreshToken: string) {
         const token = await TokenService.removeToken(refreshToken);
 
         return token;
     }
 
-    async refresh(token) {
+    async refresh(token: string) {
         if (!token) {
-            throw new Error(ReasonPhrases.UNAUTHORIZED)
-        }
-        
-        const {userDto: dto} = TokenService.validateRefreshToken(token)
-        const tokenFromDb = await TokenService.findToken(token)
-
-        if (!dto || !tokenFromDb) {
             throw new createError.Unauthorized()
         }
+        
+        const validated: any = TokenService.validateRefreshToken(token)
+        const tokenFromDb: string = await TokenService.findToken(token)
 
-        const user = await this.readOne({ id: dto.id })
-        const userDto = new UserDto(user)
-        const {accessToken, refreshToken} = TokenService.generateTokens(userDto.dto)
+        if (!validated || !tokenFromDb) {
+            throw new createError.Unauthorized()
+        }
+        
+        const user: User = await this.readOne({ id: validated.id })
+        const userDto: UserDto = new UserDto(user)
+        const {
+            accessToken, 
+            refreshToken
+        }: TokenPair = TokenService.generateTokens({...userDto.dto})
         
         await TokenService.saveToken(userDto.id, refreshToken)
 

@@ -5,7 +5,13 @@ export default class UserDto {
     phone: string;
     role: string;
 
-    constructor({ id, email, phone, username, role, refreshToken }) {
+    constructor({ id, email, phone, username, role }: {
+        id: number,
+        email: string,
+        phone: string,
+        username: string,
+        role: string
+    }) {
         this.id = id
         this.username = username
         this.email = email

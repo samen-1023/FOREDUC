@@ -1,4 +1,3 @@
-import { ReasonPhrases } from 'http-status-codes';
 import { body } from 'koa-req-validation'
 
 class AuthValidator {

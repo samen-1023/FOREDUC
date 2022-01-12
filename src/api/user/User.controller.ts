@@ -1,7 +1,7 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { Context, Next } from "koa";
 import { validationResults } from "koa-req-validation";
-import UserServices from "../services/User.services";
+import UserServices from "./User.services";
 
 class UserController {
     async registration(ctx: Context) {
@@ -11,8 +11,7 @@ class UserController {
             if (res.hasErrors()) {
                 ctx.throw(
                     StatusCodes.BAD_REQUEST,
-                    ReasonPhrases.BAD_REQUEST,
-                    res.mapped()
+                    ReasonPhrases.BAD_REQUEST
                 );
             }
 
@@ -52,8 +51,7 @@ class UserController {
             if (res.hasErrors()) {
                 ctx.throw(
                     StatusCodes.BAD_REQUEST,
-                    ReasonPhrases.BAD_REQUEST,
-                    res.mapped()
+                    ReasonPhrases.BAD_REQUEST
                 );
             }
 
@@ -90,6 +88,8 @@ class UserController {
     async refresh(ctx: Context) {
         try {
             const token = ctx.cookies.get('refreshToken')
+            console.log(token);
+            
             const {
                 id, email, phone, username, accessToken, role, refreshToken
             } = await UserServices.refresh(token)

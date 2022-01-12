@@ -1,6 +1,6 @@
 import Router from 'koa-router';
-import UserController from '../controllers/User.controller';
-import AuthValidator from '../validators/Auth.validator';
+import UserController from './User.controller';
+import AuthValidator from './User.validator';
 
 const router = new Router({
     prefix: '/api'
