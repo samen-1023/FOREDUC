@@ -1,36 +1,28 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import { Entity, Column, BeforeInsert } from "typeorm";
+import { BasicEntity } from "./common/BasicEntity";
+import { EDepartment, IEducatorPersonalData } from "./common/types";
 
 @Entity()
-export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+export class User extends BasicEntity {
+  @Column({ unique: true, type: 'varchar' })
+  username: string;
 
-    @Column({
-        unique: true
-    })
-    email: string;
+  @Column({ type: 'varchar' })
+  password: string;
 
-    @Column({
-        unique: true
-    })
-    phone: string;
+  @Column({ type: 'varchar', nullable: true })
+  role?: string;
 
-    @Column({
-        unique: true
-    })
-    username: string;
+  @Column({ type: 'varchar', nullable: true })
+  accessToken?: string;
 
-    @Column()
-    password: string;
+  @Column({ type: 'enum', default: null, nullable: true })
+  department?: EDepartment;
 
-    @Column({
-        nullable: true
-    })
-    role!: string;
+  @Column({ type: 'varchar', array: true })
+  leadsGroup: string[];
 
-    @Column({
-        unique: true,
-        nullable: true
-    })
-    refreshToken!: string;
+  @Column({ type: 'jsonb' })
+  personalData: IEducatorPersonalData;
 }
+

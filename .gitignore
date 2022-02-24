@@ -5,6 +5,6 @@ build/
 tmp/
 temp/
 .env
-ormconfig.json
+.prettierignore
+.prettierrc.json
 nodemon.json
-tsconfig.json

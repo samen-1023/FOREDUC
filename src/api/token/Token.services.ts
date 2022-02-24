@@ -1,68 +1,54 @@
-import jwt from 'jsonwebtoken';
-import createError from 'http-errors';
-import UserServices from '../user/User.services';
-import ITokenService, { Payload } from '../../types/TokenService';
+import { sign, verify } from "jsonwebtoken";
+import { Payload } from "../../entity/common/types";
+import UserService from "../user/User.services";
 
+export default class TokenService {
+  constructor(
+    private _service: UserService
+  ) {
+    this._service = new UserService();
+  }
 
-class TokenService implements ITokenService {
-    generateTokens(payload: Payload) {
-        const accessToken = jwt.sign(
-            payload,
-            process.env.JWT_ACCESS_SECRET,
-            { expiresIn: +process.env.JWT_ACCESS_EXPIRES_IN }
-        );
-        const refreshToken = jwt.sign(
-            payload,
-            process.env.JWT_REFRESH_SECRET,
-            { expiresIn: +process.env.JWT_REFRESH_EXPIRES_IN }
-        );
+  generateToken(payload: Payload) {
+    const accessToken = sign(payload, process.env.JWT_ACCESS_SECRET, {
+      expiresIn: +process.env.JWT_ACCESS_EXPIRES_IN,
+    });
 
-        return { accessToken, refreshToken };
+    return accessToken;
+  }
+
+  validateAccessToken(token: string) {
+    try {
+      return verify(token, process.env.JWT_ACCESS_SECRET);
+    } catch {
+      return null;
     }
+  }
 
-    validateAccessToken(token: string) {
-        try {
-            const user = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+  async saveToken(accessToken: string) {
+    const user = await this._service.readOne({ id: userId });
 
-            return user;
-        } catch {
-            return null;
-        }
-    }
+    // if (!user) {
+    //   throw new createError.BAD_REQUEST();
+    // }
 
-    validateRefreshToken(token: string) {
-        try {
-            const user = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+    const newUser = await this._service.update({ id: userId }, { refreshToken });
 
-            return user;
-        } catch {
-            return null;
-        }
-    }
+    return newUser;
+  }
 
-    async saveToken(userId: number, refreshToken: string) {
-        const user = await UserServices.readOne({ id: userId })
+  async removeToken(refreshToken: string) {
+    const user = await this._service.update(
+      { refreshToken },
+      { refreshToken: null }
+    );
 
-        if (!user) {
-            throw new createError.BAD_REQUEST()
-        }
+    return user;
+  }
 
-        const newUser = await UserServices.update({ id: userId }, { refreshToken });
+  async findToken(refreshToken: string) {
+    const user = await this._service.readOne({ refreshToken });
 
-        return newUser
-    }
-
-    async removeToken(refreshToken: string) {
-        const user = await UserServices.update({ refreshToken }, { refreshToken: null })
-
-        return user;
-    }
-
-    async findToken(refreshToken: string) {
-        const user = await UserServices.readOne({ refreshToken })
-
-        return user.refreshToken
-    }
+    return user.refreshToken;
+  }
 }
-
-export default new TokenService();
