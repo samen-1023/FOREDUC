@@ -4,8 +4,9 @@ import { omit } from 'ramda';
 import { BasicEntity } from '../entity/common/BasicEntity';
 
 export abstract class AbstractBaseService<E extends BasicEntity> {
+  protected repo: MongoRepository<E>;
+
   constructor(
-    protected repo: MongoRepository<E>,
     private _entity: EntityTarget<E>,
   ) {
     this.repo = getMongoRepository(this._entity);

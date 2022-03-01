@@ -1,0 +1,138 @@
+openapi: '3.0.2'
+info:
+  title: OpenAPI Foreduc
+  version: '1.0'
+
+paths:
+  /users:
+    x-exegesis-controller: user.controller
+    x-exegesis-roles: ['any']
+    get:
+      x-exegesis-operationId: getUser
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  responses:
+     Unauthorized:
+      description: Отстуствует авторизация / Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    User:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BaseSchema'
+        - type: object
+          properties:
+            username:
+              type: string
+            password:
+              type: string
+            role:
+              type: string
+            accessToken:
+              type: string
+            department:
+              $ref: '#/components/schemas/EDepartment'
+            leadsGroup:
+              type: array
+              items:
+                type: string
+            personalData:
+              $ref: '#/components/schemas/IEducatorPersonalData'
+              
+    BaseSchema:
+      type: object
+      properties:
+        _id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+
+    IEducatorPersonalData:
+      type: object
+      properties:
+        surname: 
+          type: string
+        name: 
+          type: string
+        patronymic: 
+          type: string
+        phone: 
+          type: string
+        SNILS: 
+          type: string
+        INN: 
+          type: string
+        email: 
+          type: string
+        residentialAddress: 
+          type: object
+          properties:
+            real:
+              type: string
+            registration:
+              type: string
+        passport: 
+          type: object
+          properties:
+            issuedAt:
+              type: string
+              format: date
+            issuesPlace:
+              type: string
+            number:
+              type: string
+            series:
+              type: string
+            birthdate:
+              type: string
+              format: date
+
+    EDepartment:
+      type: string
+      enum:
+        - any
+        - it
+
+    ERoles:
+      type: string
+      enum:
+        - all
+        - admin
+        - curator
+        - educator
+        - supervisor
+
+    EDocType:
+      type: string
+      enum:
+        - any
+        - report
+        - statement

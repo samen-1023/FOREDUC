@@ -1,4 +1,4 @@
-import { BaseFindFilters, BaseFilters } from './../../entity/common/types';
+import { BaseFindFilters, BaseFilters } from '../../entity/common/types';
 import { AbstractBaseService } from "../../core/AbstractBaseService";
 import { User } from "../../entity/User";
 

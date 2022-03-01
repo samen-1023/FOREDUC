@@ -10,6 +10,7 @@ export interface IEducatorPersonalData {
   INN: string;
   email: string;
   residentialAddress: IResidentialAddress;
+  passport: IPassport;
 }
 
 export interface IPassport {
