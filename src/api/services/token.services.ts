@@ -1,18 +1,14 @@
 import { ExegesisPluginContext } from "exegesis";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { sign, verify } from "jsonwebtoken";
-import { getMongoRepository } from "typeorm";
-import { Payload } from "../../entity/common/types";
-import { User } from "../../entity/User";
+import { User } from "../../entity/user";
 import UserService from "./user.services";
 
-export default class TokenService {
+export class TokenService {
   private _service: UserService
 
   constructor() {
-    this._service = new UserService(
-      User
-    );
+    this._service = new UserService();
   }
 
   checkToken(ctx: ExegesisPluginContext) {
@@ -34,21 +30,21 @@ export default class TokenService {
     // };
   }
 
-  // generateToken(payload: Payload) {
-  //   const accessToken = sign(payload, process.env.JWT_ACCESS_SECRET, {
-  //     expiresIn: +process.env.JWT_ACCESS_EXPIRES_IN,
-  //   });
+  generateToken(payload: Pick<User, 'username' | 'department' | 'role'>) {
+    const accessToken = sign(payload, process.env.JWT_ACCESS_SECRET, {
+      expiresIn: +process.env.JWT_ACCESS_EXPIRES_IN,
+    });
 
-  //   return accessToken;
-  // }
+    return accessToken;
+  }
 
-  // validateAccessToken(token: string) {
-  //   try {
-  //     return verify(token, process.env.JWT_ACCESS_SECRET);
-  //   } catch {
-  //     return null;
-  //   }
-  // }
+  validateAccessToken(token: string) {
+    try {
+      return verify(token, process.env.JWT_ACCESS_SECRET);
+    } catch {
+      return null;
+    }
+  }
 
   // async saveToken(accessToken: string) {
   //   const user = await this._service.readOne({ id: userId });

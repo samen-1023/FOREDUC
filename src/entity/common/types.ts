@@ -1,7 +1,8 @@
-import { FindManyOptions, ObjectID } from "typeorm";
-import { User } from "../User";
+import { FindCondition, FindManyOptions, ObjectID } from "typeorm";
+import { User } from "../user";
+import { BasicEntity } from "./basic-entity";
 
-export interface IEducatorPersonalData {
+export interface IPersonalData {
   surname: string;
   name: string;
   patronymic: string;
@@ -48,8 +49,18 @@ export enum EDocType {
   Statement = 'statement'
 }
 
-export type Payload = Pick<User, 'username' | 'role'>;
-
-export type BaseFindFilters<E> = string | ObjectID | Partial<E>;
-
-export type BaseFilters<E> = BaseFindFilters<E> & FindManyOptions<E>;
+export type BaseFilters<E extends BasicEntity> = {
+  conditions: FindCondition<E> | string | Record<string, any>,
+  pagination?: {
+    take: number;
+    skip: number;
+  },
+  order?: Partial<
+    Record<
+      keyof E,
+      'ASC' | 'DESC'
+    >
+  >,
+  select?: (keyof E)[];
+  relations?: string[];
+};

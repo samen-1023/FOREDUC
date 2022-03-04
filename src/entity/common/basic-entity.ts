@@ -10,10 +10,10 @@ export abstract class BasicEntity {
   @ObjectIdColumn()
   _id: ObjectID;
 
-  @CreateDateColumn({ type: "timestamp with time zone" })
+  @CreateDateColumn({ type: "timestamp" })
   createdAt: string;
 
-  @UpdateDateColumn({ type: "timestamp with time zone", nullable: true })
+  @UpdateDateColumn({ type: "timestamp", nullable: true })
   updatedAt?: string;
 
   @BeforeInsert()

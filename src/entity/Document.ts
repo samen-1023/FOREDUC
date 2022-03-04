@@ -1,5 +1,6 @@
+import { Group } from './group';
 import { Column, Entity } from "typeorm";
-import { BasicEntity } from "./common/BasicEntity";
+import { BasicEntity } from "./common/basic-entity";
 import { EDepartment, EDocType, ERoles } from "./common/types";
 
 @Entity()
@@ -13,15 +14,15 @@ export class Document extends BasicEntity {
   @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ type: 'enum', enum: EDepartment, default: EDepartment.Any })
+  @Column('enum', { enum: EDepartment, default: EDepartment.Any })
   department: EDepartment;
 
-  @Column({ type: 'enum', enum: EDocType, default: EDocType.Any })
+  @Column('enum', { enum: EDocType, default: EDocType.Any })
   type: EDocType;
 
-  @Column({ type: 'varchar', array: true, default: []})
-  groups: string[];
+  @Column(type => Group)
+  groups: Group[];
 
-  @Column({ type: 'jsonb', default: {} })
+  @Column('jsonb', { default: {} })
   data: string;
 }

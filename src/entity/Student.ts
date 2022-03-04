@@ -1,19 +1,20 @@
-import { IResidentialAddress, IPassport } from './common/types';
-import { Entity } from "typeorm";
-import { BasicEntity } from "./common/BasicEntity";
+import { Group } from './group';
+import { IPersonalData } from './common/types';
+import { Column, Entity } from "typeorm";
+import { BasicEntity } from "./common/basic-entity";
+import { Specialization } from './specialization';
 
 @Entity()
 export class Student extends BasicEntity {
-  surname: string;
-  name: string;
-  patronymic: string;
-  SNILS: string;
-  INN: string;
-  email: string;
-  phone: string;
-  specialization: string;
-  group: string;
-  creditCardNum: string;
-  residentialAddress: IResidentialAddress;
-  passport: IPassport;
+  @Column(type => Specialization)
+  specialization: Specialization;
+
+  @Column(type => Group)
+  group: Group;
+
+  @Column('jsonb')
+  personalData: IPersonalData;
+
+  @Column({ type: 'varchar', nullable: true })
+  creditCardNum?: string;
 }

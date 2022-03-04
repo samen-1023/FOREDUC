@@ -1,4 +1,4 @@
-import { ExegesisOptions, ExegesisPlugin, ExegesisPluginContext, ExegesisPluginInstance } from 'exegesis';
+import { ExegesisOptions, ExegesisPluginContext } from 'exegesis';
 import * as path from 'path';
 import * as Koa from 'koa';
 import { exegesisKoaMiddleware } from './exegesis-koa-middleware';
@@ -24,7 +24,7 @@ export default async (prefix = '') => {
   };
 
   const app = new Koa();
-  
+
   app.use(
     await exegesisKoaMiddleware(
       path.resolve(__dirname, '../api/openapi.yml'),

@@ -6,18 +6,37 @@ info:
 paths:
   /users:
     x-exegesis-controller: user.controller
-    x-exegesis-roles: ['any']
+    # x-exegesis-roles: ['any']
+    post:
+      summary: Регистрация пользователя (только для админов)
+      operationId: createAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: OK
     get:
-      x-exegesis-operationId: getUser
+      operationId: getList
+      parameters:
+        - in: query
+          name: department
+          required: false
+          schema:
+            $ref: '#/components/schemas/EDepartment'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '403':
-          $ref: '#/components/responses/Unauthorized'
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        # '403':
+        #   $ref: '#/components/responses/Unauthorized'
 
 components:
   responses:
@@ -50,7 +69,7 @@ components:
               items:
                 type: string
             personalData:
-              $ref: '#/components/schemas/IEducatorPersonalData'
+              $ref: '#/components/schemas/IPersonalData'
               
     BaseSchema:
       type: object
@@ -75,7 +94,7 @@ components:
         - code
         - message
 
-    IEducatorPersonalData:
+    IPersonalData:
       type: object
       properties:
         surname: 
@@ -136,3 +155,11 @@ components:
         - any
         - report
         - statement
+
+    SkipParam:
+      type: number
+      nullable: true
+
+    TakeParam:
+      type: number
+      nullable: true

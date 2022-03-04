@@ -1,6 +1,6 @@
-import { Entity, Column, BeforeInsert } from "typeorm";
-import { BasicEntity } from "./common/BasicEntity";
-import { EDepartment, ERoles, IEducatorPersonalData } from "./common/types";
+import { Entity, Column, BeforeInsert, BeforeUpdate } from "typeorm";
+import { BasicEntity } from "./common/basic-entity";
+import { EDepartment, ERoles, IPersonalData } from "./common/types";
 
 @Entity()
 export class User extends BasicEntity {
@@ -10,19 +10,25 @@ export class User extends BasicEntity {
   @Column({ type: 'varchar' })
   password: string;
 
-  @Column({ type: 'enum', default: ERoles.All, nullable: true })
-  role?: ERoles;
+  @Column('enum', { nullable: true, array: true })
+  role?: ERoles[];
 
   @Column({ type: 'varchar', nullable: true })
   accessToken?: string;
 
-  @Column({ type: 'enum', default: null, nullable: true })
+  @Column('enum', { nullable: true })
   department?: EDepartment;
 
-  @Column({ type: 'varchar', array: true })
-  leadsGroup: string[];
+  @Column({ type: 'varchar', array: true, nullable: true })
+  leadsGroup?: string[];
 
-  @Column({ type: 'jsonb' })
-  personalData: IEducatorPersonalData;
+  @Column('jsonb')
+  personalData: IPersonalData;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  toLowerCaseUsername() {
+    this.username = this.username.toLowerCase();
+  }
 }
 

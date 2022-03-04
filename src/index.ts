@@ -1,7 +1,5 @@
 import * as path from 'path';
 import * as dotenv from 'dotenv';
-import * as Koa from 'koa';
-import Router = require('koa-router');
 import startServer from './core/start-server';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
@@ -12,6 +10,7 @@ async function start() {
   const app = await startServer();
 
   app.listen(PORT, () => {
+    // tslint:disable-next-line: no-console
     console.log(`Server started on http://localhost:${PORT}`)
   });
 }
