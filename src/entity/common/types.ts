@@ -1,5 +1,4 @@
-import { FindCondition, FindManyOptions, ObjectID } from "typeorm";
-import { User } from "../user";
+import { FindConditions } from "typeorm";
 import { BasicEntity } from "./basic-entity";
 
 export interface IPersonalData {
@@ -49,8 +48,14 @@ export enum EDocType {
   Statement = 'statement'
 }
 
+export enum EExtention {
+  Json = '.json',
+  Xml = '.xml',
+  Xlsx = '.xlsx'
+}
+
 export type BaseFilters<E extends BasicEntity> = {
-  conditions: FindCondition<E> | string | Record<string, any>,
+  conditions: FindConditions<E> | string | Record<string, any>,
   pagination?: {
     take: number;
     skip: number;
