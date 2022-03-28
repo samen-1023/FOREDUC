@@ -1,6 +1,7 @@
 import { BaseFilters } from './../../entity/common/types';
 import { AbstractBaseService } from "../../core/abstract-base-service";
-import { Document } from "../../entity/Document";
+import { Document } from "../../entity/document";
+import { ERoles } from '../../entity/common/enums';
 
 export class DocumentService extends AbstractBaseService<Document> {
     constructor() {
@@ -10,26 +11,39 @@ export class DocumentService extends AbstractBaseService<Document> {
     async getItem({ conditions }: BaseFilters<Document>) {
         conditions = typeof conditions === 'string' ? { _id: conditions } : conditions;
 
-        const item = await this.repo.findOne({
+        return this.repo.findOne({
             where: conditions
         });
-
-        return item;
     }
 
-    async getList({
-        conditions,
-        pagination,
-        order,
-    }: BaseFilters<Document>) {
+    async getList({ conditions, pagination, order }: BaseFilters<Document>) {
         conditions = typeof conditions === 'string' ? { _id: conditions } : conditions;
         
-        const items = await this.repo.find({
+        return this.repo.find({
             where: conditions,
-            ...pagination,
-            order: { ...order }
+            order,
+            take: pagination?.take || 0,
+            skip: pagination?.skip || 0,
         });
+    }
 
-        return items;
+    private removeExtraRoles(list: ERoles[]): ERoles[] {
+        return list.includes(ERoles.All) ? [ERoles.All] : list;
+    }
+
+    /**
+     * По-умолчанию, при создании обрабатываются параметры canEdit
+     * и canRead методом removeExtraRoles
+     */
+    async createItem(data: Partial<Document>) {
+        let {canEdit, canRead, ...rest} = data;
+        canEdit = this.removeExtraRoles(canEdit);
+        canRead = this.removeExtraRoles(canRead);
+
+        return super.createItem({
+            ...rest,
+            canEdit,
+            canRead,
+        });
     }
 }

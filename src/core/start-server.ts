@@ -20,7 +20,7 @@ export default async (prefix = '') => {
         parseReq: (_req, _res, next) => next(),
       },
     },
-    ignoreServers: true,
+    ignoreServers: false,
   };
 
   const app = new Koa();

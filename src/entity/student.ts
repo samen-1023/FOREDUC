@@ -16,5 +16,5 @@ export class Student extends BasicEntity {
   personalData: IPersonalData;
 
   @Column({ type: 'varchar', nullable: true })
-  creditCardNum?: string;
+  creditCard?: string;
 }

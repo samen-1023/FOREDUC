@@ -21,37 +21,9 @@ export interface IPassport {
   birthdate: string;
 }
 
-export enum EDepartment {
-  Any = 'any',
-  It = 'it'
-}
-
 export interface IResidentialAddress {
   real?: string;
   registration: string;
-}
-
-export enum ERoles {
-  All = 'all',
-  Admin = 'admin',
-  Curator = 'curator',
-  Educator = 'educator',
-  Supervisor = 'supervisor'
-}
-
-export enum EDocType {
-  // В случае, если тип документа не входит в стандартные
-  Any = 'any',
-  // Отчёт
-  Report = 'report',
-  // Ведомость
-  Statement = 'statement'
-}
-
-export enum EExtention {
-  Json = '.json',
-  Xml = '.xml',
-  Xlsx = '.xlsx'
 }
 
 export type BaseFilters<E extends BasicEntity> = {

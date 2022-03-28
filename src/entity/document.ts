@@ -1,18 +1,18 @@
 import { Group } from './group';
 import { Column, Entity } from "typeorm";
 import { BasicEntity } from "./common/basic-entity";
-import { EDepartment, EDocType, ERoles } from "./common/types";
+import { EDepartment, EDocType, EFileNames, ERoles } from "./common/enums";
 
 @Entity()
 export class Document extends BasicEntity {
-  @Column({ type: 'varchar', array: true, default: [ERoles.All] })
-  canRead: string[];
+  @Column('enum', { enum: ERoles, array: true, default: [ERoles.All] })
+  canRead: ERoles[];
 
-  @Column({ type: 'varchar', array: true, default: [ERoles.All] })
-  canEdit: string[];
+  @Column('enum', { enum: ERoles, array: true, default: [ERoles.All] })
+  canEdit: ERoles[];
 
-  @Column({ type: 'varchar' })
-  name: string;
+  @Column('enum', { enum: EFileNames })
+  name: EFileNames;
 
   @Column('enum', { enum: EDepartment, default: EDepartment.Any })
   department: EDepartment;
@@ -20,7 +20,7 @@ export class Document extends BasicEntity {
   @Column('enum', { enum: EDocType, default: EDocType.Any })
   type: EDocType;
 
-  @Column(type => Group)
+  @Column(type => Group, { array: true })
   groups: Group[];
 
   @Column('jsonb', { default: {} })

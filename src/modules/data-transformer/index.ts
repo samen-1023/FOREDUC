@@ -1,20 +1,26 @@
-import { EFileNames, mapping } from './file-mapping';
+import { isNil } from 'ramda';
+import { mapping } from './file-mapping';
 import { DataContainer } from './data-container';
-import { Document } from '../../entity/Document';
-import { DocumentService } from '../../api/services/document.services';
+import { EFileNames } from '../../entity/common/enums';
 
 class TransformerDataPacker {
-    static parse(
+    wrap(
         data: Record<string, any> | string, 
         { name }: { name: EFileNames }
     ): DataContainer {
-        const { handler } = mapping.find(m => m.name === name);
+        const handler = this.hasHandler({ name });
+
+        if (isNil(handler)) throw new Error("Обработчика не существует, обернуть данные не получится");
 
         if (typeof data === 'string') {
             return new DataContainer(JSON.parse(data), handler);
         }
 
         return new DataContainer(data, handler);
+    }
+
+    hasHandler({ name }: { name: EFileNames }) {
+        return mapping.find(m => m.name === name)?.handler;
     }
 }
 

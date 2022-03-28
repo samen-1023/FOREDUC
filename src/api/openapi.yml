@@ -38,6 +38,91 @@ paths:
         # '403':
         #   $ref: '#/components/responses/Unauthorized'
 
+  /groups:
+    x-exegesis-controller: group.controller
+    post:
+      description: Создает новую группу
+      operationId: createItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+    get:
+      description: Отдает все группы
+      operationId: getList
+      parameters:
+        - in: query
+          name: take
+          schema:
+            type: integer
+            minimum: 0
+        - in: query
+          name: skip
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+
+  /groups/{id}:
+    x-exegesis-controller: group.controller
+    get:
+      description: Отдает группу
+      operationId: getItem
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+    put:
+      description: Модифицирует группу
+      operationId: updateItem
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+
+        
 components:
   responses:
      Unauthorized:
@@ -71,6 +156,40 @@ components:
             personalData:
               $ref: '#/components/schemas/IPersonalData'
               
+    Group:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BaseSchema'
+        - type: object
+          properties:
+            name:
+              type: string
+
+    Specialization:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BaseSchema'
+        - type: object
+          properties:
+            name:
+              type: string
+
+    Student:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BaseSchema'
+        - type: object
+          properties:
+            specialization:
+              $ref: '#/components/schemas/Specialization'
+            group:
+              $ref: '#/components/schemas/Group'
+            personalData:
+              $ref: '#/components/schemas/IPersonalData'
+            creditCard:
+              type: string
+              nullable: true
+
     BaseSchema:
       type: object
       properties:
