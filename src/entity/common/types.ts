@@ -29,8 +29,8 @@ export interface IResidentialAddress {
 export type BaseFilters<E extends BasicEntity> = {
   conditions: FindConditions<E> | string | Record<string, any>,
   pagination?: {
-    take: number;
-    skip: number;
+    take?: number;
+    skip?: number;
   },
   order?: Partial<
     Record<

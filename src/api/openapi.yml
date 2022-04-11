@@ -9,7 +9,7 @@ paths:
     # x-exegesis-roles: ['any']
     post:
       summary: Регистрация пользователя (только для админов)
-      operationId: createAdmin
+      operationId: createItem
       requestBody:
         content:
           application/json:

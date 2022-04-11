@@ -2,7 +2,7 @@
   "type": "mongodb",
   "host": "localhost",
   "port": 27017,
-  "database": "kp",
+  "database": "foreduc",
   "synchronize": true,
   "logging": true,
   "entities": ["src/entity/**/*.ts"],

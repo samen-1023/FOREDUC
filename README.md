@@ -1,7 +1,8 @@
-# Awesome Project Build with TypeORM
+# Оставшиеся задачи:
 
-Steps to run this project:
-
-1. Run `npm i` command
-2. Setup database settings inside `ormconfig.json` file
-3. Run `npm start` command
+1. (-) Сделать нормальные контроллеры
+2. (-) Найти способ получения файлов из экзегесиса
+3. (-) Продумать систему добавления пользователя
+4. (-) Добавить роли в экзегесис
+5. (-) Полностью описать контроллеры и схемы в сваггере
+6. (-) 

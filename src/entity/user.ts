@@ -1,6 +1,7 @@
 import { Entity, Column, BeforeInsert, BeforeUpdate } from "typeorm";
 import { BasicEntity } from "./common/basic-entity";
-import { EDepartment, ERoles, IPersonalData } from "./common/types";
+import { IPersonalData } from "./common/types";
+import { EDepartment, ERoles } from "./common/enums";
 
 @Entity()
 export class User extends BasicEntity {

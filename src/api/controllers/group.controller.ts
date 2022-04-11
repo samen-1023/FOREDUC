@@ -11,18 +11,14 @@ export async function getItem(ctx: ExegesisContext) {
 }
 
 export async function getList(ctx: ExegesisContext) {
-    const pagination = ctx.params.query as {
-        take?: number;
-        skip?: number;
-    }
     const service = new GroupService();
 
     return service.getList({
         conditions: {},
         pagination: {
-            take: pagination?.take,
-            skip: pagination?.skip,
-        }
+            take: ctx.params.query?.take || 0,
+            skip: ctx.params.query?.skip || 0,
+        },
     });
 }
 
@@ -34,9 +30,16 @@ export async function createItem(ctx: ExegesisContext) {
 }
 
 export async function updateItem(ctx: ExegesisContext) {
+    const service = new GroupService();
 
+    return service.saveItem({
+        _id: ctx.params.path.uid,
+        ...ctx.requestBody,
+    });
 }
 
 export async function deleteItem(ctx: ExegesisContext) {
+    const service = new GroupService();
 
+    return service.deleteItem(ctx.params.path.uid);
 }
