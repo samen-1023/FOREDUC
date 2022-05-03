@@ -1,8 +1,8 @@
-import { ObjectID } from 'typeorm';
+import { ObjectId } from "mongodb";
 
-export function toObjectID(value: string | ObjectID) {
+export function toObjectID(value: string | ObjectId) {
   if (typeof value === 'string') {
-    return new ObjectID(value);
+    return new ObjectId(value);
   }
   
   return value;

@@ -1,13 +1,10 @@
 import { ExegesisContext } from 'exegesis';
-import { Group } from '../../entity/group';
 import { GroupService } from '../services/group.services';
 
 export async function getItem(ctx: ExegesisContext) {
-    const service = new GroupService();
+    const service = new GroupService();    
 
-    return service.getItem({
-        conditions: ctx.params.path.id
-    })
+    return service.getItem(ctx.params.path.id);
 }
 
 export async function getList(ctx: ExegesisContext) {
@@ -33,7 +30,7 @@ export async function updateItem(ctx: ExegesisContext) {
     const service = new GroupService();
 
     return service.saveItem({
-        _id: ctx.params.path.uid,
+        id: ctx.params.path.id,
         ...ctx.requestBody,
     });
 }
@@ -41,5 +38,5 @@ export async function updateItem(ctx: ExegesisContext) {
 export async function deleteItem(ctx: ExegesisContext) {
     const service = new GroupService();
 
-    return service.deleteItem(ctx.params.path.uid);
+    return service.deleteItem(ctx.params.path.id);
 }

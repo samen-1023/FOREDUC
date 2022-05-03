@@ -35,8 +35,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        # '403':
-        #   $ref: '#/components/responses/Unauthorized'
 
   /groups:
     x-exegesis-controller: group.controller
@@ -87,9 +85,9 @@ paths:
       parameters:
         - in: path
           name: id
-          required: true
           schema:
             type: string
+          required: true
       responses:
         '200':
           description: OK
@@ -122,7 +120,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Group'
 
-        
+
 components:
   responses:
      Unauthorized:

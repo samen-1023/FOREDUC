@@ -1,14 +1,14 @@
+import { ObjectId } from "mongodb";
 import {
   BeforeInsert,
   CreateDateColumn,
-  ObjectID,
   ObjectIdColumn,
   UpdateDateColumn,
 } from "typeorm";
 
 export abstract class BasicEntity {
   @ObjectIdColumn()
-  _id: ObjectID;
+  id: ObjectId;
 
   @CreateDateColumn({ type: "timestamp" })
   createdAt: string;

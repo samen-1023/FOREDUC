@@ -8,25 +8,6 @@ export class DocumentService extends AbstractBaseService<Document> {
         super(Document);
     }
 
-    async getItem({ conditions }: BaseFilters<Document>) {
-        conditions = typeof conditions === 'string' ? { _id: conditions } : conditions;
-
-        return this.repo.findOne({
-            where: conditions
-        });
-    }
-
-    async getList({ conditions, pagination, order }: BaseFilters<Document>) {
-        conditions = typeof conditions === 'string' ? { _id: conditions } : conditions;
-        
-        return this.repo.find({
-            where: conditions,
-            order,
-            take: pagination?.take || 0,
-            skip: pagination?.skip || 0,
-        });
-    }
-
     private removeExtraRoles(list: ERoles[]): ERoles[] {
         return list.includes(ERoles.All) ? [ERoles.All] : list;
     }

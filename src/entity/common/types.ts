@@ -1,4 +1,6 @@
-import { FindConditions } from "typeorm";
+import { ObjectId } from 'mongodb';
+import { MongoFindManyOptions } from 'typeorm/find-options/mongodb/MongoFindManyOptions';
+import { MongoFindOneOptions } from 'typeorm/find-options/mongodb/MongoFindOneOptions';
 import { BasicEntity } from "./basic-entity";
 
 export interface IPersonalData {
@@ -27,17 +29,17 @@ export interface IResidentialAddress {
 }
 
 export type BaseFilters<E extends BasicEntity> = {
-  conditions: FindConditions<E> | string | Record<string, any>,
+  conditions: ObjectId | string | Record<string, any> | MongoFindOneOptions<E> | MongoFindManyOptions<E> ,
   pagination?: {
     take?: number;
     skip?: number;
   },
-  order?: Partial<
-    Record<
-      keyof E,
-      'ASC' | 'DESC'
-    >
-  >,
   select?: (keyof E)[];
   relations?: string[];
 };
+
+export type BaseFindOneOptions<E extends BasicEntity> = {
+  id: string | ObjectId;
+  select?: (keyof E)[];
+  relations?: string[];
+}

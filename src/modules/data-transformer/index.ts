@@ -10,8 +10,9 @@ class TransformerDataPacker {
     ): DataContainer {
         const handler = this.hasHandler({ name });
 
-        if (isNil(handler)) throw new Error("Обработчика не существует, обернуть данные не получится");
-
+        if (isNil(handler)) {
+            throw new Error("HANDLER_NOT_FOUND");
+        }
         if (typeof data === 'string') {
             return new DataContainer(JSON.parse(data), handler);
         }

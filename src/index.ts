@@ -1,3 +1,4 @@
+import { getDataSource } from './core/get-datasource';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
 import startServer from './core/start-server';
@@ -8,6 +9,9 @@ const PORT = +process.env.NODE_PORT || 3000;
 
 async function start() {
   const app = await startServer();
+
+  getDataSource.initialize()
+    .catch(e => console.log(e));
 
   app.listen(PORT, () => {
     // tslint:disable-next-line: no-console

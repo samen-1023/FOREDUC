@@ -1,21 +1,42 @@
 import { ExegesisContext } from 'exegesis';
+import { SpecializationService } from '../services/specialization.services';
 
-export function getItem(ctx: ExegesisContext) {
+export async function getItem(ctx: ExegesisContext) {
+  const service = new SpecializationService();    
 
+  return service.getItem(ctx.params.path.id);
 }
 
-export function getList(ctx: ExegesisContext) {
+export async function getList(ctx: ExegesisContext) {
+  const service = new SpecializationService();
 
+  return service.getList({
+      conditions: {},
+      pagination: {
+          take: ctx.params.query?.take || 0,
+          skip: ctx.params.query?.skip || 0,
+      },
+  });
 }
 
-export function createItem(ctx: ExegesisContext) {
+export async function createItem(ctx: ExegesisContext) {
+  const data = ctx.requestBody as { name: string };
+  const service = new SpecializationService();
 
+  return service.saveItem(data);
 }
 
-export function updateItem(ctx: ExegesisContext) {
+export async function updateItem(ctx: ExegesisContext) {
+  const service = new SpecializationService();
 
+  return service.saveItem({
+      id: ctx.params.path.id,
+      ...ctx.requestBody,
+  });
 }
 
-export function deleteItem(ctx: ExegesisContext) {
+export async function deleteItem(ctx: ExegesisContext) {
+  const service = new SpecializationService();
 
+  return service.deleteItem(ctx.params.path.id);
 }

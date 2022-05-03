@@ -32,4 +32,3 @@ export class User extends BasicEntity {
     this.username = this.username.toLowerCase();
   }
 }
-
