@@ -6,7 +6,6 @@ info:
 paths:
   /users:
     x-exegesis-controller: user.controller
-    # x-exegesis-roles: ['any']
     post:
       summary: Регистрация пользователя (только для админов)
       operationId: createItem
@@ -57,16 +56,8 @@ paths:
       description: Отдает все группы
       operationId: getList
       parameters:
-        - in: query
-          name: take
-          schema:
-            type: integer
-            minimum: 0
-        - in: query
-          name: skip
-          schema:
-            type: integer
-            minimum: 0
+        - $ref: '#/components/parameters/TakeParam'
+        - $ref: '#/components/parameters/SkipParam'
       responses:
         '200':
           description: OK
@@ -83,11 +74,7 @@ paths:
       description: Отдает группу
       operationId: getItem
       parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
+        - $ref: '#/components/parameters/OidParam'
       responses:
         '200':
           description: OK
@@ -99,11 +86,7 @@ paths:
       description: Модифицирует группу
       operationId: updateItem
       parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OidParam'
       requestBody:
         content:
           application/json:
@@ -119,9 +102,104 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Group'
+    delete:
+      description: Отдает группу
+      operationId: getItem
+      parameters:
+        - $ref: '#/components/parameters/OidParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
 
+  /specialization:
+    x-exegesis-controller: specialization.controller
+    post:
+      description: Создаёт новую специальность
+      operationId: createItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specialization'
+    get:
+      description: Отдаёт все специальности
+      operationId: getList
+      parameters:
+        - $ref: '#/components/parameters/TakeParam'
+        - $ref: '#/components/parameters/SkipParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Specialization'
+
+  /specialization/{id}:
+    x-exegesis-controller: specialization.controller
+    get:
+      description: Отдаёт специализацию
+      operationId: getItem
+      parameters:
+        - $ref: '#/components/parameters/OidParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specialization'
+    put:
+      description: Модифицирует специализацию
+      operationId: updateItem
+      parameters:
+        - $ref: '#/components/parameters/OidParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specialization'
 
 components:
+  parameters:
+    OidParam:
+      name: id
+      in: path
+      schema:
+        type: string
+      required: true
+
+    TakeParam:
+      name: take
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+      required: true
+
+    SkipParam:
+      name: skip
+      in: path
+      schema:
+        type: integer
+        minimum: 0
+      required: true
+
   responses:
      Unauthorized:
       description: Отстуствует авторизация / Unauthorized
@@ -191,7 +269,7 @@ components:
     BaseSchema:
       type: object
       properties:
-        _id:
+        id:
           type: string
         createdAt:
           type: string
@@ -272,11 +350,3 @@ components:
         - any
         - report
         - statement
-
-    SkipParam:
-      type: number
-      nullable: true
-
-    TakeParam:
-      type: number
-      nullable: true
