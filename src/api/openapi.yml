@@ -44,7 +44,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Group'
+              type: object
+              properties:
+                name:
+                  type: string
       responses:
         '200':
           description: OK
@@ -103,8 +106,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Group'
     delete:
-      description: Отдает группу
-      operationId: getItem
+      description: Удаляет группу
+      operationId: deleteItem
       parameters:
         - $ref: '#/components/parameters/OidParam'
       responses:
@@ -125,6 +128,9 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                name:
+                  type: string
       responses:
         '200':
           description: OK
@@ -165,6 +171,26 @@ paths:
     put:
       description: Модифицирует специализацию
       operationId: updateItem
+      parameters:
+        - $ref: '#/components/parameters/OidParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specialization'
+    delete:
+      description: Удаляет группу
+      operationId: deleteItem
       parameters:
         - $ref: '#/components/parameters/OidParam'
       responses:
