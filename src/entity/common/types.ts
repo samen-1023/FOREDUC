@@ -6,10 +6,10 @@ import { BasicEntity } from "./basic-entity";
 export interface IPersonalData {
   surname: string;
   name: string;
-  patronymic: string;
+  patronymic?: string;
   phone: string;
-  SNILS: string;
-  INN: string;
+  SNILS?: string;
+  INN?: string;
   email: string;
   residentialAddress: IResidentialAddress;
   passport: IPassport;
@@ -19,7 +19,7 @@ export interface IPassport {
   issuedAt: string;
   issuesPlace: string;
   number: string;
-  series: string;
+  series?: string;
   birthdate: string;
 }
 
