@@ -8,3 +8,4 @@ temp/
 .prettierignore
 .prettierrc.json
 nodemon.json
+package-lock.json

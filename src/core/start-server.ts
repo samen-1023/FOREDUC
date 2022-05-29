@@ -6,6 +6,10 @@ import { getPluginOptions } from './auth-plugin';
 import { TokenService } from '../api/services/token.services';
 import { TypeORMError } from 'typeorm';
 import * as uuid from 'uuid';
+import * as router from 'koa-router'
+import * as multer from '@koa/multer';
+import { BufferFileConverter } from './buffer-file-converter';
+import { EDocumentMIMEType } from '../entity/common/enums';
 
 export default async (prefix = '') => {
   const koaMiddlewareOptions: ExegesisOptions = {
@@ -21,11 +25,28 @@ export default async (prefix = '') => {
       'multipart/form-data': {
         parseReq: (_req, _res, next) => next(),
       },
+
     },
     ignoreServers: false,
   };
 
   const app = new Koa();
+  const _ = new router();
+  const upload = multer({
+    fileFilter: (req, file, cb) => {
+      switch(file.mimetype) {
+        case EDocumentMIMEType.xlsx:
+        case EDocumentMIMEType.xls:
+        case EDocumentMIMEType.xml:
+        case EDocumentMIMEType.json:
+          cb(null, true);
+          break;
+        default:
+          cb(new Error('MIMETYPE_IS_NOT_SUPPORTED'), false);
+          break;
+      }
+    }
+  });
 
   app.use(async (ctx, next) => {
     const requestId = uuid.v4();
@@ -60,6 +81,19 @@ export default async (prefix = '') => {
       }
     }
   });
+  
+  _.post('/upload', upload.single('document'), async (ctx) => {
+    const file = ctx.file;
+    const container = new BufferFileConverter(file);
+
+    console.log('ctx.request.file', ctx.request.file);
+    console.log('ctx.file', ctx.file);
+
+    ctx.body = container.toJSON();
+  });
+
+  app.use(_.routes())
+    .use(_.allowedMethods());
 
   app.use(
     await exegesisKoaMiddleware(

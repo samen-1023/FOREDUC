@@ -22,12 +22,6 @@ export class TokenService {
     }
 
     //TODO верификация токена
-    
-    // return {
-    //   type: 'success',
-    //   user,
-    //   roles: user.roles,
-    // };
   }
 
   generateToken(payload: Pick<User, 'username' | 'department' | 'role'>) {

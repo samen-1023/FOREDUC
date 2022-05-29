@@ -23,6 +23,6 @@ export class Document extends BasicEntity {
   @Column(type => Group, { array: true })
   groups: Group[];
 
-  @Column('jsonb', { default: {} })
-  data: string;
+  @Column('jsonb', { nullable: true })
+  data?: string;
 }

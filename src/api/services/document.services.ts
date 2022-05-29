@@ -1,4 +1,3 @@
-import { BaseFilters } from './../../entity/common/types';
 import { AbstractBaseService } from "../../core/abstract-base-service";
 import { Document } from "../../entity/document";
 import { ERoles } from '../../entity/common/enums';

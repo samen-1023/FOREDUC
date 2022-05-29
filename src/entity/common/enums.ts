@@ -29,3 +29,15 @@ export enum EDepartment {
 export enum EFileNames {
     ReportByStudents = 'report-by-students'
 }
+
+export enum EDocumentMIMEType {
+  xlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  xls = 'application/vnd.ms-excel',
+  xml = 'application/xml',
+  json = 'application/json',
+
+  // пока не пускать
+  doc = 'application/msword',
+  // пока не пускать
+  docx = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+}
