@@ -14,7 +14,8 @@ export class BufferFileConverter {
     switch(this.file.mimetype) {
       case EDocumentMIMEType.xlsx:
       case EDocumentMIMEType.xls:
-        return this.xlsxBufferToJson();
+        const excel = this.xlsxBufferToJson();
+        return excel.Sheets;
       case EDocumentMIMEType.xml:
         const parser = new XMLParser();
         const json = parser.parse(this.buffer.toString());
