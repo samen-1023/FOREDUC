@@ -4,6 +4,50 @@ info:
   version: '1.0'
 
 paths:
+  /login:
+    x-exegesis-controller: user.controller
+    post:
+      summary: Вход в систему с генерацией токена
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              parameters:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Пользователь присутствует в системе, выдается токен
+          content:
+            application/json:
+              schema:
+                type: object
+                parameters:
+                  token:
+                    type: string
+
+  /sign:
+    x-exegesis-controller: user.controller
+    post:
+      summary: Регистрация пользователя
+      operationId: sign
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Пользователь успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
   /users:
     x-exegesis-controller: user.controller
     post:

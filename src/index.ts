@@ -1,4 +1,4 @@
-import { getDataSource } from './core/get-datasource';
+import { dataSource } from './data-source';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
 import startServer from './core/start-server';
@@ -10,7 +10,7 @@ const PORT = +process.env.NODE_PORT || 3000;
 async function start() {
   const app = await startServer();
 
-  getDataSource.initialize()
+  dataSource.initialize()
     .catch(e => console.log(e));
 
   app.listen(PORT, () => {

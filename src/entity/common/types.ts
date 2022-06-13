@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { MongoFindManyOptions } from 'typeorm/find-options/mongodb/MongoFindManyOptions';
 import { MongoFindOneOptions } from 'typeorm/find-options/mongodb/MongoFindOneOptions';
 import { BasicEntity } from "./basic-entity";
@@ -29,7 +30,7 @@ export interface IResidentialAddress {
 }
 
 export type BaseFilters<E extends BasicEntity> = {
-  conditions: ObjectId | string | Record<string, any> | MongoFindOneOptions<E> | MongoFindManyOptions<E> ,
+  conditions: string | Record<string, any> | FindOneOptions<E> | FindManyOptions<E> ,
   pagination?: {
     take?: number;
     skip?: number;
@@ -39,7 +40,7 @@ export type BaseFilters<E extends BasicEntity> = {
 };
 
 export type BaseFindOneOptions<E extends BasicEntity> = {
-  id: string | ObjectId;
+  id: string
   select?: (keyof E)[];
   relations?: string[];
 }

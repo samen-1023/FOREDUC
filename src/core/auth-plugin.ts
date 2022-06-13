@@ -1,5 +1,6 @@
 import {
   ExegesisContext,
+  ExegesisPlugin,
   ExegesisPluginContext,
   ExegesisPluginInstance,
   HttpError
@@ -38,13 +39,16 @@ class AuthService implements ExegesisPluginInstance {
   }
 }
 
-export const getPluginOptions = ({ prefix }) => {
+//TODO: проанализировать документацию экзегезиса по плагинам
+// и дописать плагин так, чтобы валидировался запрос на наличие токена
+// а также, совпадает ли запрос с документацией
+export function AuthPlugin(options = {}): ExegesisPlugin {
   return {
     info: {
       name: 'exegesis-plugin-access-token-auth'
     },
     makeExegesisPlugin(): ExegesisPluginInstance {
-      return new AuthService({ prefix });
+      return;
     }
   };
 }

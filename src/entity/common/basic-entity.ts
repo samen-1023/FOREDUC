@@ -1,19 +1,18 @@
-import { ObjectId } from "mongodb";
 import {
   BeforeInsert,
   CreateDateColumn,
-  ObjectIdColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
 export abstract class BasicEntity {
-  @ObjectIdColumn()
-  id: ObjectId;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @CreateDateColumn({ type: "timestamp" })
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: string;
 
-  @UpdateDateColumn({ type: "timestamp", nullable: true })
+  @UpdateDateColumn({ nullable: true, type: 'timestamp' })
   updatedAt?: string;
 
   @BeforeInsert()

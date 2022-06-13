@@ -1,67 +1,67 @@
 import { BaseFilters, BaseFindOneOptions } from '../entity/common/types';
-import { DeepPartial, EntityTarget, MongoRepository, ObjectID } from "typeorm";
+import { DeepPartial, EntityTarget, In, Repository } from "typeorm";
 import { BasicEntity } from '../entity/common/basic-entity';
 import { omit } from 'ramda';
-import { getDataSource } from './get-datasource';
-import { toObjectID } from '../functions/to-object-id';
-import { transformConditions } from '../functions/transform-conditions';
+import { dataSource } from '../data-source';
 
 type TUpdateRequest<E> = Partial<E> & Pick<E, keyof E>;
 
 export abstract class AbstractBaseService<E extends BasicEntity> {
-  protected repo: MongoRepository<E>;
+  protected repo: Repository<E>;
 
   constructor(
     private _entity: EntityTarget<E>,
   ) {
-    this.repo = getDataSource.getMongoRepository(this._entity);
+    this.repo = dataSource.getRepository(this._entity);
   }
 
   async saveItem(data: Partial<E>): Promise<E> {
     if ('id' in data) {
-      const {id, ...rest} = data;
-      const oid = toObjectID(id);
+      let {id, ...rest} = data;
 
-      return this.updateItem({id: oid, ...rest} as E);
+      return this.updateItem({id, ...rest} as E);
     } else {
       return this.createItem(data);
     }
   }
 
   protected async createItem(data: Partial<E>): Promise<E> {
-    const omitFields = ['_id', 'createdAt', 'updatedAt'];
+    const omitFields = ['createdAt', 'updatedAt'];
     const item = omit(omitFields, data);
 
     return this.repo.save(item as any);
   }
 
   protected async updateItem(data: TUpdateRequest<E>): Promise<E> {
-    const {id, ...rest} = data;
-    const oid = toObjectID(id);
     const omitFields = ['createdAt', 'updatedAt'];
-    const item = omit(omitFields, rest) as TUpdateRequest<E>;
+    const item = omit(omitFields, data) as TUpdateRequest<E>;
 
-    await this.repo.save({id: oid, ...rest} as DeepPartial<E>);
+    await this.repo.save({ ...item } as DeepPartial<E>);
 
-    return this.getItem({ id: oid });
+    return this.getItem({ id: item.id as string });
   }
 
   async getItem(conditions: BaseFindOneOptions<E>): Promise<E> {
     const {id, ...rest} = conditions;
-    const oid = (typeof id === 'string' ? toObjectID(id): id) as any;
 
-    return this.repo.findOne({
-        where: { id: oid },
-        ...rest,
-    });
+    return this.repo.findOne({ where: { id } as any, ...rest });
 }
 
   async getList({ conditions, pagination }: BaseFilters<E>) {
     conditions = typeof conditions === 'string' ? { id: conditions } : conditions;
-    conditions = transformConditions(conditions as any);
+    
+    for (const key in conditions) {
+      let elem = conditions[key];
+      
+      if (Array.isArray(elem)) {
+        elem = In(elem);
+      }
+
+      conditions[key] = elem;
+    }
 
     const elems = await this.repo.find({
-        where: conditions,
+        where: conditions as any,
         take: pagination?.take || 0,
         skip: pagination?.skip || 0,
     });        
@@ -70,8 +70,7 @@ export abstract class AbstractBaseService<E extends BasicEntity> {
   }
 
   async deleteItem(id: string): Promise<E> {
-    const oid = toObjectID(id);
-    const item = await this.getItem({ id: oid });
+    const item = await this.getItem({ id });
     await this.repo.remove(item);
 
     return item;

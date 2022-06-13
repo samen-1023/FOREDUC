@@ -17,7 +17,7 @@ export const exegesisKoaMiddleware = async (
       ctx.body = result.body;
       ctx.set(
         R.mapObjIndexed(
-          (v, k, obj) => (obj[k] = obj[k].toString()),
+          (v, k, obj) => (obj[k] = obj[k]?.toString() || ''),
           result.headers,
         ),
       );

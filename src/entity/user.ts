@@ -1,30 +1,31 @@
-import { Entity, Column, BeforeInsert, BeforeUpdate } from "typeorm";
+import { Group } from './group';
+import { Entity, Column, BeforeInsert, BeforeUpdate, ManyToMany, OneToMany } from "typeorm";
 import { BasicEntity } from "./common/basic-entity";
 import { IPersonalData } from "./common/types";
 import { EDepartment, ERoles } from "./common/enums";
 
 @Entity()
 export class User extends BasicEntity {
-  @Column({ unique: true, type: 'varchar' })
+  @Column('varchar', { unique: true })
   username: string;
 
-  @Column({ type: 'varchar' })
+  @Column('varchar')
   password: string;
 
-  @Column('enum', { nullable: true, array: true })
+  @Column('enum', { nullable: true, enum: ERoles, array: true })
   role?: ERoles[];
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column('varchar', { nullable: true })
   accessToken?: string;
 
-  @Column('enum', { nullable: true })
+  @Column('enum', { nullable: true, enum: EDepartment })
   department?: EDepartment;
 
-  @Column({ type: 'varchar', array: true, nullable: true })
-  leadsGroup?: string[];
+  @OneToMany(() => Group, group => group.user)
+  groups?: Group[];
 
-  @Column('jsonb')
-  personalData: IPersonalData;
+  @Column('jsonb', { nullable: true })
+  personalData?: IPersonalData;
 
   @BeforeInsert()
   @BeforeUpdate()

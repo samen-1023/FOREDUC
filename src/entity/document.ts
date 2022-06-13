@@ -1,5 +1,5 @@
 import { Group } from './group';
-import { Column, Entity } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
 import { BasicEntity } from "./common/basic-entity";
 import { EDepartment, EDocType, EFileNames, ERoles } from "./common/enums";
 
@@ -20,8 +20,9 @@ export class Document extends BasicEntity {
   @Column('enum', { enum: EDocType, default: EDocType.Any })
   type: EDocType;
 
-  @Column(type => Group, { array: true })
-  groups: Group[];
+  @ManyToMany(() => Group)
+  @JoinTable()
+  groups?: Group[];
 
   @Column('jsonb', { nullable: true })
   data?: string;

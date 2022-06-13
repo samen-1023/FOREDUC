@@ -9,24 +9,10 @@ export function getItem(ctx: ExegesisContext) {
 }
 
 export async function getList(ctx: ExegesisContext) {
-  const conditions = ctx.params.query as {
-    specializationId?: string;
-    groupId?: string;
-    creditCard?: string;
-  };
-  
-  if (conditions?.specializationId) {
-    conditions['specialization.id'] = conditions.specializationId;
-  }
-
-  if (conditions?.groupId) {
-    conditions['group.id'] = conditions.groupId;
-  }
-
   const service = new StudentService();
 
   return service.getList({
-    conditions,
+    conditions: { ...ctx.params.query },
     pagination: {
       take: ctx.params.query?.take || 0,
       skip: ctx.params.query?.skip || 0,
