@@ -45,25 +45,30 @@ export abstract class AbstractBaseService<E extends BasicEntity> {
     const {id, ...rest} = conditions;
 
     return this.repo.findOne({ where: { id } as any, ...rest });
-}
+  }
+
+  private transformArrayPropsInto<T>(
+    object: T, 
+    transformer: any,
+  ): Record<string, any> {
+    const res = {};
+
+    for (const [key, value] of Object.entries(object)) {
+      if (Array.isArray(value)) res[key] = transformer(value);
+      else res[key] = value;
+    }
+
+    return res;
+  }
 
   async getList({ conditions, pagination }: BaseFilters<E>) {
     conditions = typeof conditions === 'string' ? { id: conditions } : conditions;
-    
-    for (const key in conditions) {
-      let elem = conditions[key];
-      
-      if (Array.isArray(elem)) {
-        elem = In(elem);
-      }
-
-      conditions[key] = elem;
-    }
+    conditions = this.transformArrayPropsInto(conditions, In);
 
     const elems = await this.repo.find({
-        where: conditions as any,
-        take: pagination?.take || 0,
-        skip: pagination?.skip || 0,
+      where: conditions as any,
+      take: pagination?.take || 0,
+      skip: pagination?.skip || 0,
     });        
 
     return elems;

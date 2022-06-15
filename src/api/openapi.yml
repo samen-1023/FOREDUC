@@ -50,34 +50,71 @@ paths:
 
   /users:
     x-exegesis-controller: user.controller
-    post:
-      summary: Регистрация пользователя (только для админов)
-      operationId: createItem
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '200':
-          description: OK
     get:
+      description: Отдает список юзеров
       operationId: getList
       parameters:
+        - $ref: '#/components/parameters/TakeParam'
+        - $ref: '#/components/parameters/SkipParam'
         - in: query
           name: department
-          required: false
           schema:
-            $ref: '#/components/schemas/EDepartment'
+            type: array
+            items:
+              type: string
       responses:
         '200':
-          description: OK
+          description: Список юзеров
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+
+  /users/{id}:
+    x-exegesis-controller: user.controller
+    get:
+      description: Отдает юзера
+      operationId: getItem
+      parameters:
+        - $ref: '#/components/parameters/UidParam'
+      responses:
+        '200':
+          description: Объект юзера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      description: Модифицирует юзера и возвращает его
+      operationId: updateItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      parameters:
+        - $ref: '#/components/parameters/UidParam'
+      responses:
+        '200':
+          description: Удаленный юзер
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      description: Удаляет юзера и возвращает его
+      operationId: deleteItem
+      parameters:
+        - $ref: '#/components/parameters/UidParam'
+      responses:
+        '200':
+          description: Удаленный юзер
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
 
   /groups:
     x-exegesis-controller: group.controller
@@ -94,13 +131,13 @@ paths:
                   type: string
       responses:
         '200':
-          description: OK
+          description: Созданная группа
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Group'
     get:
-      description: Отдает все группы
+      description: Отдает список группы
       operationId: getList
       parameters:
         - $ref: '#/components/parameters/TakeParam'
@@ -121,48 +158,45 @@ paths:
       description: Отдает группу
       operationId: getItem
       parameters:
-        - $ref: '#/components/parameters/OidParam'
+        - $ref: '#/components/parameters/UidParam'
       responses:
         '200':
-          description: OK
+          description: Объект группы
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Group'
     put:
-      description: Модифицирует группу
+      description: Модифицирует группу и возвращает ее
       operationId: updateItem
       parameters:
-        - $ref: '#/components/parameters/OidParam'
+        - $ref: '#/components/parameters/UidParam'
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
+              $ref: '#/components/schemas/Group'
       responses:
         '200':
-          description: OK
+          description: Модифицированная группа
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Group'
     delete:
-      description: Удаляет группу
+      description: Удаляет группу и возвращает ее
       operationId: deleteItem
       parameters:
-        - $ref: '#/components/parameters/OidParam'
+        - $ref: '#/components/parameters/UidParam'
       responses:
         '200':
-          description: OK
+          description: Удаленная группа
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Group'
 
-  /specialization:
+  /specializations:
     x-exegesis-controller: specialization.controller
     post:
       description: Создаёт новую специальность
@@ -171,10 +205,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
+              $ref: '#/components/schemas/Specialization'
       responses:
         '200':
           description: OK
@@ -183,14 +214,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Specialization'
     get:
-      description: Отдаёт все специальности
+      description: Отдаёт список специальностей
       operationId: getList
       parameters:
         - $ref: '#/components/parameters/TakeParam'
         - $ref: '#/components/parameters/SkipParam'
       responses:
         '200':
-          description: OK
+          description: Список специальностей
           content:
             application/json:
               schema:
@@ -198,16 +229,16 @@ paths:
                 items:
                   $ref: '#/components/schemas/Specialization'
 
-  /specialization/{id}:
+  /specializations/{id}:
     x-exegesis-controller: specialization.controller
     get:
       description: Отдаёт специализацию
       operationId: getItem
       parameters:
-        - $ref: '#/components/parameters/OidParam'
+        - $ref: '#/components/parameters/UidParam'
       responses:
         '200':
-          description: OK
+          description: Объект специализации
           content:
             application/json:
               schema:
@@ -216,38 +247,110 @@ paths:
       description: Модифицирует специализацию
       operationId: updateItem
       parameters:
-        - $ref: '#/components/parameters/OidParam'
+        - $ref: '#/components/parameters/UidParam'
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
+              $ref: '#/components/schemas/Specialization'
       responses:
         '200':
-          description: OK
+          description: Модфицированная специализация
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Specialization'
     delete:
-      description: Удаляет группу
+      description: Удаляет группу и возвращает ее
       operationId: deleteItem
       parameters:
-        - $ref: '#/components/parameters/OidParam'
+        - $ref: '#/components/parameters/UidParam'
       responses:
         '200':
-          description: OK
+          description: Удаленная группа
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Specialization'
 
+  /documents:
+    post:
+      description: Создает документ
+      operationId: createItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Document'
+      responses:
+        '200':
+          description: Объект документа
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+    get:
+      description: Отдает список документов
+      operationId: getList
+      parameters:
+        - $ref: '#/components/parameters/TakeParam'
+        - $ref: '#/components/parameters/SkipParam'
+      responses:
+        '200':
+          description: Список документов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Document'
+
+  /documents/{id}:
+    get:
+      description: Отдаёт документ
+      operationId: getItem
+      parameters:
+        - $ref: '#/components/parameters/UidParam'
+      responses:
+        '200':
+          description: Объект документа
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+    put:
+      description: Модифицирует документ
+      operationId: updateItem
+      parameters:
+        - $ref: '#/components/parameters/UidParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Document'
+      responses:
+        '200':
+          description: Модфицированный документ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+    delete:
+      description: Удаляет документ и возвращает его
+      operationId: deleteItem
+      parameters:
+        - $ref: '#/components/parameters/UidParam'
+      responses:
+        '200':
+          description: Удаленный документ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+
 components:
   parameters:
-    OidParam:
+    UidParam:
       name: id
       in: path
       schema:
@@ -256,10 +359,11 @@ components:
 
     TakeParam:
       name: take
-      in: query
+      in: path
       schema:
         type: integer
         minimum: 0
+        maximum: 50
       required: true
 
     SkipParam:
@@ -268,6 +372,7 @@ components:
       schema:
         type: integer
         minimum: 0
+        maximum: 50
       required: true
 
   responses:
@@ -318,6 +423,29 @@ components:
         - type: object
           properties:
             name:
+              type: string
+
+    Document:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BaseSchema'
+        - type: object
+          properties:
+            canRead:
+              type: array
+              items:
+                type: string
+            canEdit:
+              type: array
+              items:
+                type: string
+            name:
+              type: string
+            department:
+              type: string
+            type:
+              type: string
+            data:
               type: string
 
     Student:

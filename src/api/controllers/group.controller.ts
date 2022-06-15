@@ -1,10 +1,13 @@
 import { ExegesisContext } from 'exegesis';
+import { Group } from '../../entity/group';
 import { GroupService } from '../services/group.services';
 
 export async function getItem(ctx: ExegesisContext) {
     const service = new GroupService();    
 
-    return service.getItem(ctx.params.path.id);
+    return service.getItem({
+        id: ctx.params.path.id
+    });
 }
 
 export async function getList(ctx: ExegesisContext) {
@@ -13,14 +16,14 @@ export async function getList(ctx: ExegesisContext) {
     return service.getList({
         conditions: {},
         pagination: {
-            take: ctx.params.query?.take || 0,
-            skip: ctx.params.query?.skip || 0,
+            take: ctx.params.path?.take,
+            skip: ctx.params.path?.skip,
         },
     });
 }
 
 export async function createItem(ctx: ExegesisContext) {
-    const data = ctx.requestBody as { name: string };
+    const data = ctx.requestBody as Partial<Group>;
     const service = new GroupService();
 
     return service.saveItem(data);

@@ -1,24 +1,30 @@
 import { ExegesisContext, HttpError } from 'exegesis';
+import R = require('ramda');
 import { User } from '../../entity/user';
 import UserService from '../services/user.services';
 
-export function getItem(ctx: ExegesisContext) {
+export async function getItem(ctx: ExegesisContext) {
     const service = new UserService();
 
-    return service.getItem({
+    return await service.getItem({
         id: ctx.params.path.id,
-    });
+    }).then(
+        user => R.omit(['password', 'accessToken'], user)
+    );
 }
 
-export function getList(ctx: ExegesisContext) {
-    // Пока не нужно реализовывать
-}
-
-export function createItem(ctx: ExegesisContext) {
-    const user = ctx.requestBody as Partial<User>;
+export async function getList(ctx: ExegesisContext) {
     const service = new UserService();
 
-    return service.saveItem(user);
+    return await service.getList({
+        conditions: { ...ctx.params.query },
+        pagination: {
+            take: ctx.params.path?.take,
+            skip: ctx.params.path?.skip,
+        }
+    }).then(
+        users => users.map(user =>  R.omit(['password', 'accessToken'], user))
+    );
 }
 
 export function updateItem(ctx: ExegesisContext) {
@@ -46,10 +52,10 @@ export async function login(ctx: ExegesisContext) {
             username: data.username,
             password: data.password,
         });
+        const token = service.generateToken(user);
+        await service.saveToken(token, user);
 
-        return {
-            token: service.generateToken(user)
-        };
+        return { token };
     } catch (error) {
         console.error(error);
         throw new HttpError(403, error.message)

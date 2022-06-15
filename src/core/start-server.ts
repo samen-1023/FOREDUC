@@ -1,3 +1,4 @@
+import { User } from './../entity/user';
 import { ExegesisOptions, ExegesisPluginContext } from 'exegesis';
 import * as path from 'path';
 import * as Koa from 'koa';
@@ -8,13 +9,17 @@ import * as router from 'koa-router'
 import * as multer from '@koa/multer';
 import { BufferFileConverter } from './buffer-file-converter';
 import { EDocumentMIMEType } from '../entity/common/enums';
-import { AuthPlugin } from './auth-plugin';
+import UserService from '../api/services/user.services';
 
 export default async (prefix = '') => {
   const koaMiddlewareOptions: ExegesisOptions = {
     controllers: path.resolve(__dirname, '../api/controllers'),
     controllersPattern: '**/*.controller.@(ts|js)',
-    plugins: [AuthPlugin()],
+    authenticators: {
+      BearerAuth: (ctx: ExegesisPluginContext & { user?: User }) => {
+        return (new UserService()).checkAuthToken(ctx);
+      },
+    },
 
     mimeTypeParsers: {
       'multipart/form-data': {
@@ -46,7 +51,7 @@ export default async (prefix = '') => {
   app.use(logger);
   
   _.post('/upload', upload.single('document'), async (ctx) => {
-    const sheet = ctx.params.sheet;
+    // const sheet = ctx.params.sheet;
     const file = ctx.file || ctx.request.file;
     const container = new BufferFileConverter(file);
     const json = container.toJSON();
