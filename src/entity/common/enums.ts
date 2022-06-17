@@ -3,7 +3,8 @@ export enum ERoles {
     Admin = 'admin',
     Curator = 'curator',
     Educator = 'educator',
-    Supervisor = 'supervisor'
+    Supervisor = 'supervisor',
+    Public = 'public',
 }
 
 export enum EDocType {

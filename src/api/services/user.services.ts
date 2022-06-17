@@ -8,6 +8,7 @@ import * as path from 'path';
 import * as dotenv from 'dotenv';
 import { ExegesisPluginContext } from "exegesis";
 import configs from "../../core/configs";
+import { log } from 'console';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
@@ -79,9 +80,9 @@ export default class UserService extends AbstractBaseService<User> {
     try {
       const token = tokenRaw.replace(/^Bearer:?\s+/i, '');
       jwt.verify(token, configs.jwt.secret);
-      const jwtData = jwt.decode(token) as { id: string; username: string; };
-
-      if (!(jwtData?.id && jwtData?.username)) {
+      const jwtData = jwt.decode(token) as { id: string; username: string };
+      
+      if (!jwtData.id || !jwtData.username) {
         return {
           type: 'invalid',
           statusCode: 401,
@@ -96,7 +97,7 @@ export default class UserService extends AbstractBaseService<User> {
         }
       });
       
-      if (user.accessToken !== token) {
+      if (!user || user?.accessToken !== token) {
         return {
           type: 'invalid', 
           statusCode: 401, 

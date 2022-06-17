@@ -12,8 +12,8 @@ export class User extends BasicEntity {
   @Column('varchar')
   password: string;
 
-  @Column('enum', { nullable: true, enum: ERoles, array: true })
-  role?: ERoles[];
+  @Column('enum', { default: [ERoles.Public], enum: ERoles, array: true })
+  role: ERoles[];
 
   @Column('varchar', { nullable: true })
   accessToken?: string;

@@ -4,6 +4,7 @@
   "main": "index.js",
   "devDependencies": {
     "@types/koa": "^2.13.4",
+    "@types/multiparty": "^0.0.33",
     "@types/node": "^17.0.23",
     "@types/ramda": "^0.28.14",
     "@types/uuid": "^8.3.4",
@@ -33,6 +34,7 @@
     "koa": "^2.13.4",
     "koa-router": "^10.1.1",
     "multer": "^1.4.4",
+    "multiparty": "^4.2.3",
     "pg": "^8.7.3",
     "ramda": "^0.28.0",
     "reflect-metadata": "^0.1.13",

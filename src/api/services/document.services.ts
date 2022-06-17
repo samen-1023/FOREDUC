@@ -1,3 +1,4 @@
+import { log } from 'console';
 import { AbstractBaseService } from "../../core/abstract-base-service";
 import { Document } from "../../entity/document";
 import { ERoles } from '../../entity/common/enums';
@@ -16,14 +17,18 @@ export class DocumentService extends AbstractBaseService<Document> {
      * и canRead методом removeExtraRoles
      */
     async createItem(data: Partial<Document>) {
-        let {canEdit, canRead, ...rest} = data;
-        canEdit = this.removeExtraRoles(canEdit);
-        canRead = this.removeExtraRoles(canRead);
+        // const canEdit = 
+        //     data?.canEdit ? this.removeExtraRoles(data.canEdit) : null;
+        // const canRead = 
+        //     data?.canRead ? this.removeExtraRoles(data.canRead) : null;
 
-        return super.createItem({
-            ...rest,
-            canEdit,
-            canRead,
-        });
+
+        return new Document();
+
+        // return super.createItem({
+        //     ...data,
+        //     canEdit,
+        //     canRead,
+        // });
     }
 }

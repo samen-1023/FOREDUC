@@ -6,7 +6,7 @@ import { XMLParser } from 'fast-xml-parser';
 export class BufferFileConverter {
   private buffer: Buffer;
 
-  constructor(private file: multer.File) {
+  constructor(private file: multer.File | { buffer: Buffer; mimetype: string }) {
     this.buffer = file.buffer;
   }
 

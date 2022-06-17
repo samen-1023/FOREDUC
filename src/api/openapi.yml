@@ -17,8 +17,10 @@ paths:
               parameters:
                 username:
                   type: string
+                  required: true
                 password:
                   type: string
+                  required: true
       responses:
         '200':
           description: Пользователь присутствует в системе, выдается токен
@@ -50,6 +52,8 @@ paths:
 
   /users:
     x-exegesis-controller: user.controller
+    security:
+      - BearerAuth: []
     get:
       description: Отдает список юзеров
       operationId: getList
@@ -59,9 +63,7 @@ paths:
         - in: query
           name: department
           schema:
-            type: array
-            items:
-              type: string
+            type: string
       responses:
         '200':
           description: Список юзеров
@@ -74,6 +76,8 @@ paths:
 
   /users/{id}:
     x-exegesis-controller: user.controller
+    security:
+      - BearerAuth: []
     get:
       description: Отдает юзера
       operationId: getItem
@@ -118,6 +122,8 @@ paths:
 
   /groups:
     x-exegesis-controller: group.controller
+    security:
+      - BearerAuth: []
     post:
       description: Создает новую группу
       operationId: createItem
@@ -154,6 +160,8 @@ paths:
 
   /groups/{id}:
     x-exegesis-controller: group.controller
+    security:
+      - BearerAuth: []
     get:
       description: Отдает группу
       operationId: getItem
@@ -198,6 +206,8 @@ paths:
 
   /specializations:
     x-exegesis-controller: specialization.controller
+    security:
+      - BearerAuth: []
     post:
       description: Создаёт новую специальность
       operationId: createItem
@@ -231,6 +241,8 @@ paths:
 
   /specializations/{id}:
     x-exegesis-controller: specialization.controller
+    security:
+      - BearerAuth: []
     get:
       description: Отдаёт специализацию
       operationId: getItem
@@ -274,12 +286,15 @@ paths:
                 $ref: '#/components/schemas/Specialization'
 
   /documents:
+    x-exegesis-controller: document.controller
+    security:
+      - BearerAuth: []
     post:
       description: Создает документ
       operationId: createItem
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/Document'
       responses:
@@ -306,6 +321,9 @@ paths:
                   $ref: '#/components/schemas/Document'
 
   /documents/{id}:
+    x-exegesis-controller: document.controller
+    security:
+      - BearerAuth: []
     get:
       description: Отдаёт документ
       operationId: getItem
@@ -364,7 +382,7 @@ components:
         type: integer
         minimum: 0
         maximum: 50
-      required: true
+        default: 50
 
     SkipParam:
       name: skip
@@ -373,7 +391,7 @@ components:
         type: integer
         minimum: 0
         maximum: 50
-      required: true
+        default: 0
 
   responses:
      Unauthorized:
@@ -395,17 +413,28 @@ components:
             password:
               type: string
             role:
-              type: string
+              type: array
+              items:
+                type: string
+              nullable: true
             accessToken:
+              nullable: true
               type: string
             department:
-              $ref: '#/components/schemas/EDepartment'
+              anyOf:
+                - $ref: '#/components/schemas/EDepartment'
+                - type: object
+                  nullable: true
             leadsGroup:
+              nullable: true
               type: array
               items:
                 type: string
             personalData:
-              $ref: '#/components/schemas/IPersonalData'
+              anyOf:
+                - type: object
+                  nullable: true
+                - $ref: '#/components/schemas/IPersonalData'
               
     Group:
       type: object
@@ -432,18 +461,22 @@ components:
         - type: object
           properties:
             canRead:
+              nullable: true
               type: array
               items:
                 type: string
             canEdit:
+              nullable: true
               type: array
               items:
                 type: string
             name:
               type: string
             department:
+              nullable: true
               type: string
             type:
+              nullable: true
               type: string
             data:
               type: string

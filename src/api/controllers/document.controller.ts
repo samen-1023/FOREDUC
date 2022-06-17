@@ -1,3 +1,4 @@
+import { log } from 'console';
 import { ExegesisContext } from 'exegesis';
 import { EDepartment, EDocType, EFileNames, ERoles } from '../../entity/common/enums';
 import { Document } from '../../entity/document';

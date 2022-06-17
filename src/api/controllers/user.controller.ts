@@ -19,8 +19,8 @@ export async function getList(ctx: ExegesisContext) {
     return await service.getList({
         conditions: { ...ctx.params.query },
         pagination: {
-            take: ctx.params.path?.take,
-            skip: ctx.params.path?.skip,
+            take: ctx.params.path?.take || 0,
+            skip: ctx.params.path?.skip || 0,
         }
     }).then(
         users => users.map(user =>  R.omit(['password', 'accessToken'], user))

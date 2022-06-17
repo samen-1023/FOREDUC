@@ -10,6 +10,11 @@ import * as multer from '@koa/multer';
 import { BufferFileConverter } from './buffer-file-converter';
 import { EDocumentMIMEType } from '../entity/common/enums';
 import UserService from '../api/services/user.services';
+import {Form} from 'multiparty';
+import * as fs from 'fs/promises';
+import * as xlsx from 'xlsx';
+import { request } from 'http';
+
 
 export default async (prefix = '') => {
   const koaMiddlewareOptions: ExegesisOptions = {
@@ -23,7 +28,30 @@ export default async (prefix = '') => {
 
     mimeTypeParsers: {
       'multipart/form-data': {
-        parseReq: (_req, _res, next) => next(),
+        parseReq: async (req, res, next) => {
+          const form = new Form({
+            autoFiles: true,
+          });
+          
+          form.parse(req, async (err, fields, files) => {
+            if (!err) {
+              console.log(files.data);
+              const {path, headers: { 'content-type': mimetype }} = files.data[0];
+
+              const file = await fs.readFile(path, { encoding: 'utf-8' });
+              console.log(mimetype);
+              const container = new BufferFileConverter({
+                buffer: Buffer.from(file, 'utf-8'), 
+                mimetype
+              });
+              const json = container.toJSON();
+
+              console.log(json)
+            }
+          });
+
+          next();          
+        },
       },
 
     },
@@ -50,17 +78,17 @@ export default async (prefix = '') => {
 
   app.use(logger);
   
-  _.post('/upload', upload.single('document'), async (ctx) => {
-    // const sheet = ctx.params.sheet;
-    const file = ctx.file || ctx.request.file;
-    const container = new BufferFileConverter(file);
-    const json = container.toJSON();
+  // _.post('/upload', upload.single('document'), async (ctx) => {
+  //   // const sheet = ctx.params.sheet;
+  //   const file = ctx.file || ctx.request.file;
+  //   const container = new BufferFileConverter(file);
+  //   const json = container.toJSON();
 
-    ctx.body = json;
-  });
+  //   ctx.body = json;
+  // });
 
-  app.use(_.routes())
-    .use(_.allowedMethods());
+  // app.use(_.routes())
+  //   .use(_.allowedMethods());
 
   app.use(
     await exegesisKoaMiddleware(
