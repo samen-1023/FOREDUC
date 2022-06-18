@@ -1,6 +1,4 @@
-import { log } from 'console';
 import { ExegesisContext } from 'exegesis';
-import { EDepartment, EDocType, EFileNames, ERoles } from '../../entity/common/enums';
 import { Document } from '../../entity/document';
 import { DocumentService } from '../services/document.services';
 
@@ -24,11 +22,15 @@ export function getList(ctx: ExegesisContext) {
   });
 }
 
-export function createItem(ctx: ExegesisContext) {
+export async function createItem(ctx: ExegesisContext) {
   const data = ctx.requestBody as Partial<Document>;
   const service = new DocumentService();
+  const {data: file, ...rest} = await service.createItem(data);
 
-  return service.createItem(data);
+  return {
+    ...rest,
+    data: JSON.parse(file),
+  }
 }
 
 export function updateItem(ctx: ExegesisContext) {

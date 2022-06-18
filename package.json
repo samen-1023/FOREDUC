@@ -23,7 +23,6 @@
   "description": "",
   "type": "commonjs",
   "dependencies": {
-    "@koa/multer": "^3.0.0",
     "@types/koa__multer": "^2.0.4",
     "@types/koa-router": "^7.4.4",
     "bcryptjs": "^2.4.3",

@@ -5,15 +5,9 @@ import * as Koa from 'koa';
 import { exegesisKoaMiddleware } from './exegesis-koa-middleware';
 import logger from '../functions/logger';
 
-import * as router from 'koa-router'
-import * as multer from '@koa/multer';
-import { BufferFileConverter } from './buffer-file-converter';
-import { EDocumentMIMEType } from '../entity/common/enums';
 import UserService from '../api/services/user.services';
 import {Form} from 'multiparty';
-import * as fs from 'fs/promises';
-import * as xlsx from 'xlsx';
-import { request } from 'http';
+import { FileConverter } from './buffer-file-converter';
 
 
 export default async (prefix = '') => {
@@ -35,22 +29,33 @@ export default async (prefix = '') => {
           
           form.parse(req, async (err, fields, files) => {
             if (!err) {
-              console.log(files.data);
-              const {path, headers: { 'content-type': mimetype }} = files.data[0];
+              try {
+                if (files?.data && files?.data?.[0].size !== 0) {
+                  const {path, headers: { 'content-type': mimetype }} = files.data[0];
+                  const container = new FileConverter(
+                    path,
+                    mimetype
+                  );
+                  const json = container.toJSON();
+                  const props = Object.entries(fields).reduce((acc, [k, v]) => {
+                    acc[k] = v[0];
 
-              const file = await fs.readFile(path, { encoding: 'utf-8' });
-              console.log(mimetype);
-              const container = new BufferFileConverter({
-                buffer: Buffer.from(file, 'utf-8'), 
-                mimetype
-              });
-              const json = container.toJSON();
-
-              console.log(json)
+                    return acc;
+                  }, {} as Record<string, any>);
+                  
+                  
+                  next(null, {
+                    ...props,
+                    data: JSON.stringify(json),
+                  }); 
+                } else {
+                  throw new Error('FILE_IS_NOT_FOUND_OR_FILE_IS_EMPTY')
+                }
+              } catch (err) {
+                next(err)
+              }
             }
-          });
-
-          next();          
+          });         
         },
       },
 
@@ -59,37 +64,7 @@ export default async (prefix = '') => {
   };
 
   const app = new Koa();
-  const _ = new router();
-  const upload = multer({
-    fileFilter: (req, file, cb) => {
-      switch(file.mimetype) {
-        case EDocumentMIMEType.xlsx:
-        case EDocumentMIMEType.xls:
-        case EDocumentMIMEType.xml:
-        case EDocumentMIMEType.json:
-          cb(null, true);
-          break;
-        default:
-          cb(new Error('MIMETYPE_IS_NOT_SUPPORTED'), false);
-          break;
-      }
-    }
-  });
-
   app.use(logger);
-  
-  // _.post('/upload', upload.single('document'), async (ctx) => {
-  //   // const sheet = ctx.params.sheet;
-  //   const file = ctx.file || ctx.request.file;
-  //   const container = new BufferFileConverter(file);
-  //   const json = container.toJSON();
-
-  //   ctx.body = json;
-  // });
-
-  // app.use(_.routes())
-  //   .use(_.allowedMethods());
-
   app.use(
     await exegesisKoaMiddleware(
       path.resolve(__dirname, '../api/openapi.yml'),
