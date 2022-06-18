@@ -52,9 +52,9 @@ paths:
 
   /users:
     x-exegesis-controller: user.controller
-    security:
-      - BearerAuth: []
     get:
+      security:
+        - BearerAuth: []
       description: Отдает список юзеров
       operationId: getList
       parameters:
@@ -76,9 +76,9 @@ paths:
 
   /users/{id}:
     x-exegesis-controller: user.controller
-    security:
-      - BearerAuth: []
     get:
+      security:
+        - BearerAuth: []
       description: Отдает юзера
       operationId: getItem
       parameters:
@@ -91,6 +91,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
     put:
+      security:
+        - BearerAuth: []
       description: Модифицирует юзера и возвращает его
       operationId: updateItem
       requestBody:
@@ -108,6 +110,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
     delete:
+      security:
+        - BearerAuth: []
       description: Удаляет юзера и возвращает его
       operationId: deleteItem
       parameters:
@@ -122,9 +126,9 @@ paths:
 
   /groups:
     x-exegesis-controller: group.controller
-    security:
-      - BearerAuth: []
     post:
+      security:
+        - BearerAuth: []
       description: Создает новую группу
       operationId: createItem
       requestBody:
@@ -143,6 +147,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Group'
     get:
+      security:
+        - BearerAuth: []
       description: Отдает список группы
       operationId: getList
       parameters:
@@ -160,9 +166,9 @@ paths:
 
   /groups/{id}:
     x-exegesis-controller: group.controller
-    security:
-      - BearerAuth: []
     get:
+      security:
+        - BearerAuth: []
       description: Отдает группу
       operationId: getItem
       parameters:
@@ -175,6 +181,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Group'
     put:
+      security:
+        - BearerAuth: []
       description: Модифицирует группу и возвращает ее
       operationId: updateItem
       parameters:
@@ -192,6 +200,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Group'
     delete:
+      security:
+        - BearerAuth: []
       description: Удаляет группу и возвращает ее
       operationId: deleteItem
       parameters:
@@ -206,9 +216,9 @@ paths:
 
   /specializations:
     x-exegesis-controller: specialization.controller
-    security:
-      - BearerAuth: []
     post:
+      security:
+        - BearerAuth: []
       description: Создаёт новую специальность
       operationId: createItem
       requestBody:
@@ -224,6 +234,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Specialization'
     get:
+      security:
+        - BearerAuth: []
       description: Отдаёт список специальностей
       operationId: getList
       parameters:
@@ -241,9 +253,9 @@ paths:
 
   /specializations/{id}:
     x-exegesis-controller: specialization.controller
-    security:
-      - BearerAuth: []
     get:
+      security:
+        - BearerAuth: []
       description: Отдаёт специализацию
       operationId: getItem
       parameters:
@@ -256,6 +268,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Specialization'
     put:
+      security:
+        - BearerAuth: []
       description: Модифицирует специализацию
       operationId: updateItem
       parameters:
@@ -273,6 +287,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Specialization'
     delete:
+      security:
+        - BearerAuth: []
       description: Удаляет группу и возвращает ее
       operationId: deleteItem
       parameters:
@@ -287,9 +303,9 @@ paths:
 
   /documents:
     x-exegesis-controller: document.controller
-    security:
-      - BearerAuth: []
     post:
+      security:
+        - BearerAuth: []
       description: Создает документ
       operationId: createItem
       requestBody:
@@ -305,6 +321,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Document'
     get:
+      security:
+        - BearerAuth: []
       description: Отдает список документов
       operationId: getList
       parameters:
@@ -322,9 +340,9 @@ paths:
 
   /documents/{id}:
     x-exegesis-controller: document.controller
-    security:
-      - BearerAuth: []
     get:
+      security:
+        - BearerAuth: []
       description: Отдаёт документ
       operationId: getItem
       parameters:
@@ -337,6 +355,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Document'
     put:
+      security:
+        - BearerAuth: []
       description: Модифицирует документ
       operationId: updateItem
       parameters:
@@ -354,6 +374,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Document'
     delete:
+      security:
+        - BearerAuth: []
       description: Удаляет документ и возвращает его
       operationId: deleteItem
       parameters:

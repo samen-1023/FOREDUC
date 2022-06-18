@@ -15,9 +15,8 @@ export default async (prefix = '') => {
     controllers: path.resolve(__dirname, '../api/controllers'),
     controllersPattern: '**/*.controller.@(ts|js)',
     authenticators: {
-      BearerAuth: (ctx: ExegesisPluginContext & { user?: User }) => {
-        return (new UserService()).checkAuthToken(ctx);
-      },
+      BearerAuth: (ctx: ExegesisPluginContext & { user?: User }) =>
+        new UserService().checkAuthToken(ctx),
     },
 
     mimeTypeParsers: {
