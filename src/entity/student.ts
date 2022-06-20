@@ -1,6 +1,6 @@
 import { Group } from './group';
 import { IPersonalData } from './common/types';
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { BasicEntity } from "./common/basic-entity";
 import { Specialization } from './specialization';
 
@@ -13,8 +13,10 @@ export class Student extends BasicEntity {
   creditCard?: string;
 
   @ManyToOne(() => Specialization, specialization => specialization.students)
+  @JoinColumn()
   specialization: Specialization;
 
   @ManyToOne(() => Group, group => group.students)
+  @JoinColumn()
   group: Group;
 }

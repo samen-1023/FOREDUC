@@ -1,6 +1,5 @@
 import { User } from './user';
-import { Document } from './document';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from "typeorm";
 import { BasicEntity } from "./common/basic-entity";
 import { Student } from './student';
 
@@ -13,5 +12,6 @@ export class Group extends BasicEntity {
   students: Student[];
 
   @ManyToOne(() => User, user => user.groups)
+  @JoinColumn()
   user: User;
 }

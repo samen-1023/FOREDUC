@@ -388,6 +388,93 @@ paths:
               schema:
                 $ref: '#/components/schemas/Document'
 
+  /students:
+    x-exegesis-controller: student.controller
+    post:
+      security:
+        - BearerAuth: []
+      description: Создает студента
+      operationId: createItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '200':
+          description: Объект студента
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+    get:
+      security:
+        - BearerAuth: []
+      description: Отдает список студентов
+      operationId: getList
+      parameters:
+        - $ref: '#/components/parameters/TakeParam'
+        - $ref: '#/components/parameters/SkipParam'
+      responses:
+        '200':
+          description: Список студентов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+
+  /students/{id}:
+    x-exegesis-controller: student.controller
+    get:
+      security:
+        - BearerAuth: []
+      description: Отдаёт студента
+      operationId: getItem
+      parameters:
+        - $ref: '#/components/parameters/UidParam'
+      responses:
+        '200':
+          description: Объект студента
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+    put:
+      security:
+        - BearerAuth: []
+      description: Модифицирует студента
+      operationId: updateItem
+      parameters:
+        - $ref: '#/components/parameters/UidParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '200':
+          description: Модфицированный студент
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+    delete:
+      security:
+        - BearerAuth: []
+      description: Удаляет студента и возвращает его
+      operationId: deleteItem
+      parameters:
+        - $ref: '#/components/parameters/UidParam'
+      responses:
+        '200':
+          description: Удаленный студент
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+
 components:
   parameters:
     UidParam:
